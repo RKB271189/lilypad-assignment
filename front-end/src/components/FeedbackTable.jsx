@@ -90,6 +90,7 @@ function FeedbackTable() {
                   <th>Message</th>
                   <th>Rating</th>
                   <th>Date</th>
+                  <th>Happiness</th>
                 </tr>
               </thead>
               <tbody>
@@ -106,6 +107,7 @@ function FeedbackTable() {
                       <td>{feedback.message}</td>
                       <td>{feedback.rating}</td>
                       <td>{feedback.created_at}</td>
+                      <td>{feedback.happiness}</td>
                     </tr>
                   ))
                 ) : (

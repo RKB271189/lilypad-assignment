@@ -12,7 +12,7 @@ class Feedback extends Model
 
     protected $table = 'feedbacks';
 
-    protected $fillable = ['name', 'message', 'rating'];
+    protected $fillable = ['name', 'message', 'rating', 'happiness'];
 
     public function getCreatedAtAttribute($value)
     {

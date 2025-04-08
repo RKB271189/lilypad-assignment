@@ -17,7 +17,8 @@ class FeedbackFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'message' => $this->faker->paragraph(),
-            'rating' => $this->faker->numberBetween(1, 5)
+            'rating' => $this->faker->numberBetween(1, 5),
+            'happiness' => $this->faker->randomElement(['🥲', '😐', '🙂', '😄', '🤩']),
         ];
     }
 }

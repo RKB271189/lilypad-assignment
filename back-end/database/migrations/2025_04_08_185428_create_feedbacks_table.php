@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('message');
             $table->tinyInteger('rating')->unsigned();
+            $table->string('happiness')->nullable();
             $table->timestamps();
         });
     }

@@ -12,6 +12,7 @@ function FeedbackForm() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState("");
+  const [happiness, setHappiness] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -21,7 +22,7 @@ function FeedbackForm() {
     setLoading(true);
     setError(null);
     setSuccess(null);
-    const feedbackData = { name, message, rating };
+    const feedbackData = { name, message, rating, happiness };
 
     try {
       const response = await axios.post(
@@ -31,6 +32,7 @@ function FeedbackForm() {
       setName("");
       setMessage("");
       setRating("");
+      setHappiness("");
       setSuccess(response.data.message);
     } catch (err) {
       if (err.response) {
@@ -139,6 +141,64 @@ function FeedbackForm() {
                 <option value="4">4 - Very Good</option>
                 <option value="5">5 - Excellent</option>
               </select>
+            </div>
+
+            <div className="mb-3">
+              <label
+                htmlFor="happiness"
+                className={`form-label ${error ? "text-danger" : ""} ${
+                  success ? "text-success" : ""
+                }`}
+              >
+                How happy are you with this app?
+              </label>
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="happiness"
+                    value="🥲"
+                    onChange={() => setHappiness("🥲")}
+                  />
+                  🥲
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="happiness"
+                    value="😐"
+                    onChange={() => setHappiness("😐")}
+                  />
+                  😐
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="happiness"
+                    value="🙂"
+                    onChange={() => setHappiness("🙂")}
+                  />
+                  🙂
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="happiness"
+                    value="😄"
+                    onChange={() => setHappiness("😄")}
+                  />
+                  😄
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="happiness"
+                    value="🤩"
+                    onChange={() => setHappiness("🤩")}
+                  />
+                  🤩
+                </label>
+              </div>
             </div>
 
             <div className="d-grid gap-2">
