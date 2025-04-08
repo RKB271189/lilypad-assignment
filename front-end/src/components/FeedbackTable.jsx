@@ -9,42 +9,46 @@ function FeedbackTable() {
   const [error, setError] = useState(null);
   const [filterRating, setFilterRating] = useState("");
 
+  const fetchFeedbacks = async (rating = null) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const url = "http://localhost:8000/api/feedback";
+      const response = rating
+        ? await axios.get(url, { params: { rating } })
+        : await axios.get(url);
+      setFeedbacks(response.data.feedback);
+    } catch (err) {
+      if (err.response) {
+        setError(
+          `Error: ${
+            err.response.data.error ||
+            "An error occurred while submitting feedback."
+          }`
+        );
+      } else if (err.request) {
+        setError("No response received from the server.");
+      } else {
+        setError(`Request failed: ${err.error}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleNavigateToForm = () => {
     navigate("/feedback-form");
   };
 
+  const handleRatingChange = (selectedRating) => {
+    setFilterRating(selectedRating);
+    fetchFeedbacks(selectedRating || null);
+  };
+
   useEffect(() => {
-    const fetchFeedbacks = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await axios.get("http://localhost:8000/api/feedback");
-        setFeedbacks(response.data);
-      } catch (err) {
-        if (err.response) {
-          setError(
-            `Error: ${
-              err.response.data.message ||
-              "An error occurred while submitting feedback."
-            }`
-          );
-        } else if (err.request) {
-          setError("No response received from the server.");
-        } else {
-          setError(`Request failed: ${err.message}`);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchFeedbacks();
   }, []);
-
-  const filteredFeedbacks = filterRating
-    ? feedbacks.filter((feedback) => feedback.rating === filterRating)
-    : feedbacks;
 
   return (
     <div className="container mt-3">
@@ -64,7 +68,7 @@ function FeedbackTable() {
           <select
             className="form-select"
             value={filterRating}
-            onChange={(e) => setFilterRating(e.target.value)}
+            onChange={(e) => handleRatingChange(e.target.value)}
           >
             <option value="">Filter by Rating</option>
             <option value="1">1 - Poor</option>
@@ -91,12 +95,11 @@ function FeedbackTable() {
                 {loading ? (
                   <tr>
                     <td colSpan="3" className="text-center">
-                      <div className="spinner-border" role="status">                       
-                      </div>
+                      <div className="spinner-border" role="status"></div>
                     </td>
                   </tr>
-                ) : filteredFeedbacks.length > 0 ? (
-                  filteredFeedbacks.map((feedback) => (
+                ) : feedbacks.length > 0 ? (
+                  feedbacks.map((feedback) => (
                     <tr key={feedback.id}>
                       <td>{feedback.name}</td>
                       <td>{feedback.message}</td>

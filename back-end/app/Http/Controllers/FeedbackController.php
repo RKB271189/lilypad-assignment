@@ -9,10 +9,14 @@ use Illuminate\Http\Request;
 class FeedbackController extends Controller
 {
     public function __construct(private FeedbackService $feedbackService) {}
-    public function index()
+    public function index(Request $request)
     {
-        try {           
-            $feedback = $this->feedbackService->getCollection();
+        try {
+            if ($request->has('rating')) {
+                $feedback = $this->feedbackService->getLatestFilterByRating(10, $request->rating);
+            } else {
+                $feedback = $this->feedbackService->getLatest(10);
+            }
             return response()->json(['feedback' => $feedback], 200);
         } catch (Exception $ex) {
             logger('Error fetching feedback', [$ex->getMessage()]);
