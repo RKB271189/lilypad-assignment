@@ -1,0 +1,17 @@
+FROM node:lts-alpine
+
+ENV HOST=0.0.0.0
+
+ENV CHOKIDAR_USEPOLLING=true
+
+WORKDIR /app/front-end
+
+COPY front-end/package*.json ./
+
+RUN npm install
+
+COPY front-end .
+
+EXPOSE 3000
+
+CMD [ "npm", "run", "dev" ]

@@ -1,0 +1,13 @@
+node_modules
+
+.vscode/
+.idea/
+*.iml
+
+.DS_Store
+Thumbs.db
+
+*.log
+
+docker-compose.override.yml
+Dockerfile.*
