@@ -27,7 +27,7 @@ class FeedbackController extends Controller
     public function store(FeedbackRequest $request)
     {
         try {
-            $params = $request->only('name', 'message', 'rating');
+            $params = $request->only('name', 'message', 'rating', 'happiness');
             $create = $this->feedbackService->createCollection($params);
             if ($create) {
                 return response()->json(['message' => 'Feedback submitted successfully.'], 200);
