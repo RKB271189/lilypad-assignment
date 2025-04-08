@@ -1,14 +1,21 @@
-import { useState } from "react";
-import "./App.css";
+// src/App.jsx
+import React from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import FeedbackTable from "./components/FeedbackTable"; // Your Feedback Table
+import FeedbackForm from "./components/FeedbackForm"; // Your Feedback Form
 
 function App() {
   return (
-    <>
-      <div class="container">
-        <h1 class="text-center mt-5">Welcome to Lily Pad Assignment</h1>
-        <button class="btn btn-primary">Click Me</button>
-      </div>
-    </>
+    <div className="container-fluid">
+      {/* Define Routes for Feedback Table and Feedback Form */}
+      <Routes>
+        {/* Route for displaying the feedback table */}
+        <Route path="/" element={<FeedbackTable />} />
+
+        {/* Route for the feedback form */}
+        <Route path="/feedback-form" element={<FeedbackForm />} />
+      </Routes>
+    </div>
   );
 }
 
