@@ -28,23 +28,22 @@ function FeedbackForm() {
         "http://localhost:8000/api/feedback",
         feedbackData
       );
-      console.log(response);
       setName("");
       setMessage("");
       setRating("");
-      setSuccess("Feedback submitted successfully!");
+      setSuccess(response.data.message);
     } catch (err) {
       if (err.response) {
         setError(
           `Error: ${
-            err.response.data.message ||
+            err.response.data.error ||
             "An error occurred while submitting feedback."
           }`
         );
       } else if (err.request) {
         setError("No response received from the server.");
       } else {
-        setError(`Request failed: ${err.message}`);
+        setError(`Request failed: ${err.error}`);
       }
     } finally {
       setLoading(false);
