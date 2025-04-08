@@ -1,14 +1,70 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 function FeedbackForm() {
   const navigate = useNavigate();
 
   const handleNavigateToTable = () => {
     navigate("/");
   };
+
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [rating, setRating] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    const feedbackData = { name, message, rating };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/feedback",
+        feedbackData
+      );
+      console.log(response);
+      setName("");
+      setMessage("");
+      setRating("");
+      setSuccess("Feedback submitted successfully!");
+    } catch (err) {
+      if (err.response) {
+        setError(
+          `Error: ${
+            err.response.data.message ||
+            "An error occurred while submitting feedback."
+          }`
+        );
+      } else if (err.request) {
+        setError("No response received from the server.");
+      } else {
+        setError(`Request failed: ${err.message}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="container mt-4">
       <h1 className="text-center mb-4">Add Feedback</h1>
+      {success && (
+        <div className="alert alert-success" role="alert">
+          {success}
+        </div>
+      )}
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
+
       <div className="row mb-3">
         <div className="col-md-2 offset-md-10">
           <button
@@ -19,38 +75,64 @@ function FeedbackForm() {
           </button>
         </div>
       </div>
+
       <div className="row justify-content-center">
         <div className="col-md-6">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="name" className="form-label">
+              <label
+                htmlFor="name"
+                className={`form-label ${error ? "text-danger" : ""} ${
+                  success ? "text-success" : ""
+                }`}
+              >
                 Name
               </label>
               <input
                 type="text"
-                className="form-control"
                 id="name"
-                placeholder="Enter your name"
+                className="form-control"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
+
             <div className="mb-3">
-              <label htmlFor="message" className="form-label">
+              <label
+                htmlFor="message"
+                className={`form-label ${error ? "text-danger" : ""} ${
+                  success ? "text-success" : ""
+                }`}
+              >
                 Message
               </label>
               <textarea
-                className="form-control"
                 id="message"
+                className="form-control"
                 rows="4"
-                placeholder="Enter your feedback"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 required
               ></textarea>
             </div>
+
             <div className="mb-3">
-              <label htmlFor="rating" className="form-label">
+              <label
+                htmlFor="rating"
+                className={`form-label ${error ? "text-danger" : ""} ${
+                  success ? "text-success" : ""
+                }`}
+              >
                 Rating
               </label>
-              <select className="form-select" id="rating" required>
+              <select
+                id="rating"
+                className="form-select"
+                value={rating}
+                onChange={(e) => setRating(e.target.value)}
+                required
+              >
                 <option value="">Select rating</option>
                 <option value="1">1 - Poor</option>
                 <option value="2">2 - Fair</option>
@@ -59,9 +141,14 @@ function FeedbackForm() {
                 <option value="5">5 - Excellent</option>
               </select>
             </div>
+
             <div className="d-grid gap-2">
-              <button type="submit" className="btn btn-success">
-                Submit Feedback
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={loading}
+              >
+                {loading ? "Submitting..." : "Submit Feedback"}
               </button>
             </div>
           </form>
